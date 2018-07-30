@@ -37,6 +37,12 @@ public class Item implements Serializable {
     @Lob
     private String comments;
     
+    @ManyToOne
+    private Institute institute;
+    
+    @ManyToOne
+    private Department department;
+    
     
     
     
@@ -129,6 +135,22 @@ public class Item implements Serializable {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public Institute getInstitute() {
+        return institute;
+    }
+
+    public void setInstitute(Institute institute) {
+        this.institute = institute;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
     
 }
