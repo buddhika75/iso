@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+
+            <ui:define name="body">
+
+                <h:form >
+
+                    <p:panel header="Search Client Processes" >
+
+                        <p:panelGrid columns="3" >
+
+                            <p:outputLabel value="Search by Name or Phone No." ></p:outputLabel>
+                            <p:inputText autocomplete="off" value="#{clientProcessController.searchText}" ></p:inputText>
+                            <p:commandButton value="Search" ajax="false" action="#{clientProcessController.searchClientProcesses()}" ></p:commandButton>
+
+                        </p:panelGrid>
+
+                        <p:dataTable value="#{clientProcessController.selectedItems}" var="c" >
+                            <p:column headerText="Name" >
+                                <p:outputLabel value="#{c.clientName}" ></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Mobile" >
+                                <p:outputLabel value="#{c.mobileNo}" ></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Process" >
+                                <p:outputLabel value="#{c.process.name}" ></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="View" >
+                                <p:commandButton value="View" ajax="false" action="/client_process/client_process" >
+                                    <f:setPropertyActionListener value="#{c}" target="#{clientProcessController.selected}" ></f:setPropertyActionListener>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+                    </p:panel>
+
+                </h:form>
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

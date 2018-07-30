@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:body>
+
+        <ui:composition template="./../template.xhtml">
+
+            <h:outputStylesheet library="css" name="main.css" ></h:outputStylesheet>
+
+            <ui:define name="body">
+                <h:form >
+                    <p:panel header="Client Process" >
+
+                        <p:panelGrid columns="3" styleClass="alignTop" >
+
+                            <p:panel header="Client" >
+
+                                <p:panelGrid columns="2" class="alignTop" >
+                                    <p:outputLabel value="Name" ></p:outputLabel>
+                                    <p:inputText value="#{clientProcessController.selected.clientName}" ></p:inputText>
+
+                                    <p:outputLabel value="Mobile" ></p:outputLabel>
+                                    <p:inputText value="#{clientProcessController.selected.mobileNo}" ></p:inputText>
+
+                                    <p:outputLabel value="Designation" ></p:outputLabel>
+                                    <p:selectOneMenu value="#{clientProcessController.selected.designation}" >
+                                        <f:selectItem itemLabel="Select" ></f:selectItem>
+                                        <f:selectItems value="#{itemController.positions}" var="d" itemLabel="#{d.name}" itemValue="#{d}" ></f:selectItems>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Institution" ></p:outputLabel>
+                                    <p:autoComplete id="sendingInstitute" value="#{clientProcessController.selected.institute}"
+                                                    var="i" itemLabel="#{i.name}" itemValue="#{i}" 
+                                                    completeMethod="#{instituteController.completeInstitutes}"
+                                                    forceSelection="true"  size="50"  >
+                                    </p:autoComplete>
+
+                                </p:panelGrid>
+
+                            </p:panel>
+
+
+                            <p:panel header="Actions" >
+                                <p:panelGrid columns="1" >
+                                    <p:commandButton ajax="false" value="Update" action="#{clientProcessController.update()}" ></p:commandButton>
+                                    <p:commandButton ajax="false" value="Mark as Complete" action="#{clientProcessController.update()}" ></p:commandButton>
+                                    <p:commandButton ajax="false" value="Mark as still to Complete" action="#{clientProcessController.update()}" ></p:commandButton>
+                                </p:panelGrid>
+                            </p:panel>
+
+                            <p:panel header="Custom SMS" >
+                                <p:panelGrid columns="1" >
+                                    <p:outputLabel value="Message" ></p:outputLabel>
+                                    <p:inputText value="#{clientProcessController.customSmsMessage}" ></p:inputText>
+                                    <p:commandButton value="Sent SMS" action="#{clientProcessController.sendCustomSms()}" ajax="false" ></p:commandButton>
+                                </p:panelGrid>
+                            </p:panel>
+
+
+
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="3" styleClass="alignTop" class="alignTop" >
+
+                            <p:dataTable value="#{itemController.getProcessSteps(clientProcessController.selected.process)}" 
+                                         var="s">
+                                <p:column headerText="Setp" >
+                                    <p:outputLabel value="#{s.name}" ></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Setp" >
+                                    <p:outputLabel value="#{s.name}" ></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Actions" >
+                                    <p:outputLabel  rendered="#{clientProcessController.procesStepIsComplete(s)}" value="Completed"></p:outputLabel>
+                                    <p:commandButton rendered="#{!clientProcessController.procesStepIsComplete(s)}" value="Mark Complete" action="#{clientProcessController.processStepAction}" ajax="false">
+                                        <f:setPropertyActionListener value="#{s}" target="#{clientProcessController.processStep}" ></f:setPropertyActionListener>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+
+
+                            <p:dataTable value="#{itemController.getProcessFailures(clientProcessController.selected.process)}" 
+                                         var="f">
+                                <p:column headerText="Failure" >
+                                    <p:outputLabel value="#{f.name}" ></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Actions" >
+                                    <p:commandButton value="Send SMS" action="#{clientProcessController.processFailureAction()}" ajax="false">
+                                        <f:setPropertyActionListener value="#{f}" target="#{clientProcessController.processFailure}" ></f:setPropertyActionListener>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+
+
+
+                            <p:dataTable value="#{smsController.getSmses(clientProcessController.selected)}" var="s" >
+                                <p:column headerText="Sent At" >
+                                    <p:outputLabel value="#{s.sentDateTime}" >
+                                        <f:convertDateTime pattern="dd MMMM yyyy hh:mm a" ></f:convertDateTime>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Message" >
+                                    <p:outputLabel value="#{s.message}" ></p:outputLabel>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panelGrid>
+                    </p:panel>
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body>
+</html>
